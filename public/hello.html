@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    hello Nodejs 
+    <form action="/api/search" method="GET">
+        <input type="text" name="bookName" id="bookName">
+        <input type="text" name="publishedYear" id="publishedYear">
+    </form>
+    <button class="searchBtn">search</button>
+    <div>
+        <ul id="searchHistory">
+
+        </ul>
+    </div>
+    <script>
+        const searchHistory = document.querySelector("#searchHistory");
+        let searchDto={
+            "bookName" :"",
+            "publishedYear" : ""
+        } ; 
+       const searchBtn  =  document.querySelector(".searchBtn");
+        searchBtn.addEventListener("click",()=>{
+           const bookName  = document.querySelector("#bookName").value;
+           const publishedYear =  document.querySelector("#publishedYear").value;
+           searchDto= {
+               "bookName" : bookName,
+               "publishedYear" :publishedYear 
+           };
+           searchDto = JSON.stringify(searchDto);
+           requestPath = "/api/search";
+           axios(
+               {
+                   method: 'post',
+                   url : requestPath,
+                   headers: {
+                      'Content-Type':'application/json',
+                      'charset' :'UTF-8'
+                    },
+                    data : searchDto
+                   
+               })
+           .then((result)=>{
+               console.log(result);
+               result = result.data.data;
+               searchHistory.innerHTML += `<li> ${result.publishedYear + "/" + result.bookName} </li>`;
+            })
+           .catch((data)=>console.log(data));
+        })
+    </script>
+</body>
+</html>
